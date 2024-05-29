@@ -1,0 +1,28 @@
+TRANSFORMERS:
+  morgan: "chemberta_256_tanimoto"
+  espsim_electrostatic: "chemberta_256_espsim"
+  espsim_shape: "chemberta_256_shapesim"
+  active_pairs: "active_pairs_chembl31_256"
+
+DIM: "256"
+
+OUTPUT_DIRECTORIES: 
+  ENAMINE-REAL: "/data/enamine_real" 
+  ZINC15: "/data/zinc15"
+  CUSTOM: "/data/custom_output"
+
+DELIMITERS:
+  ENAMINE-REAL: "\t" 
+  ZINC15: ","
+  CUSTOM: ","
+
+INDEX_TYPES:
+  ENAMINE-REAL: "clustered"
+  ZINC15: "clustered"
+  CUSTOM: "in_memory"
+
+
+DEVICE: "cuda"
+API_URL: "http://XXXX:9001"
+UI_URL: "http://XXXX:9003"
+
