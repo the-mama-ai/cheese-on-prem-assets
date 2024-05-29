@@ -15,7 +15,7 @@ LICENSING="True"
 
 EXTENSION=".csv"
 DELIMITER=","
-INDEX_TYPE="in_memory"   # in_memory or clustered
+INDEX_TYPE=$index_type   # in_memory or clustered
 DEVICE="cuda"
 BATCH_SIZE=128
 
