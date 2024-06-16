@@ -1,0 +1,23 @@
+#!/bin/bash
+ALL_ARGS=$@
+
+
+command=$1
+
+while [ $# -gt 0 ]; do
+    if [[ $1 == "--"* ]]; then
+        v="${1/--/}"
+        declare "$v"="$2"
+        shift
+    fi
+    shift
+done
+
+
+if [ "$command" = "start-app" ]; then
+    cheese-app
+elif [ "$command" = "inference" ]; then
+    cheese-inference --input_file $input_file
+else
+    sudo docker run -it --entrypoint "python" -v /data:/data -u root --env PORT=$DB_PORT --env CONFIG_FILE=$CONFIG_FILE --env LICENSING=$LICENSING --env CHEESE_LICENSE_FILE=$LICENSE_FILE --rm $DB_IMAGE -c 'import cheese_database.cheese_cli as cli; cli.app()' $ALL_ARGS
+fi

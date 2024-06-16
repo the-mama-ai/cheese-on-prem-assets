@@ -1,0 +1,12 @@
+#!/bin/sh
+# Login to Azure CR
+echo updating CHEESE...
+sudo docker login -u cheese-customer-test -p $CHEESE_PASSWORD $REPO_NAME
+
+# # Pull the CHEESE app images
+
+sudo docker pull $UI_IMAGE
+sudo docker pull $DB_IMAGE
+sudo docker pull $API_IMAGE
+sudo docker pull $DOCS_IMAGE
+sudo docker pull $INFERENCE_IMAGE

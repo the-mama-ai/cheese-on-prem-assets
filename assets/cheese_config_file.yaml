@@ -23,6 +23,4 @@ INDEX_TYPES:
 
 
 DEVICE: "cuda"
-API_URL: "http://XXXX:9001"
-UI_URL: "http://XXXX:9003"
 
