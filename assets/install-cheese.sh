@@ -29,6 +29,7 @@ echo "export DB_PORT=${db_port}" >> ~/.bashrc
 echo "export API_PORT=${api_port}" >> ~/.bashrc 
 echo "export UI_PORT=${ui_port}" >> ~/.bashrc 
 
+REPO_NAME='themamaai.azurecr.io/cheese'
 FULL_IMAGE_NAME=$REPO_NAME"/cheese_inference:"$customer
 echo "export INFERENCE_IMAGE=${FULL_IMAGE_NAME}" >> ~/.bashrc 
 
