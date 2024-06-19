@@ -15,11 +15,11 @@ done
 for x in $ALL_ARGS
 do 
 help=$x;
-if [ "$x" = "--validate_smiles"]; then
+if [ "$x" = "--validate_smiles" ]; then
     validate_smiles="true" ; 
 fi
 
-if [ "$x" = "--canonicalize_smiles"]; then
+if [ "$x" = "--canonicalize_smiles" ]; then
     canonicalize_smiles="true" ; 
 fi
 
