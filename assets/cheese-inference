@@ -27,7 +27,7 @@ FILESIZE=$(du $input_file | awk '{print $1}')
 # Checkpoint
 echo "Size of $input_file = $FILESIZE KB."
 
-if (($index_type = "")); then
+if (($index_type == "")); then
 
     if (( FILESIZE > MAXSIZE)); then
         INDEX_TYPE="clustered"
@@ -41,7 +41,7 @@ INDEX_TYPE=$index_type
 fi
 
 # Specify GPU device
-if (($gpu_device = "")); then
+if (($gpu_device == "")); then
     GPU_DEVICE="0"
 
 else
