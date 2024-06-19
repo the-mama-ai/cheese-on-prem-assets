@@ -3,17 +3,10 @@ ALL_ARGS=$@
 
 command=$1
 
-while [ $# -gt 0 ]; do
-    if [[ $1 == "--"* ]]; then
-        v="${1/--/}"
-        declare "$v"="$2"
-        shift
-    fi
-    shift
-done
 
 VALIDATE_SMILES="false"
 CANONICALIZE_SMILES="false"
+
 for x in $ALL_ARGS
 do 
 help=$x;
@@ -26,6 +19,15 @@ if [ "$x" = "--canonicalize_smiles" ]; then
     CANONICALIZE_SMILES="true" ; 
 fi
 
+done
+
+while [ $# -gt 0 ]; do
+    if [[ $1 == "--"* ]]; then
+        v="${1/--/}"
+        declare "$v"="$2"
+        shift
+    fi
+    shift
 done
 
 
@@ -44,7 +46,6 @@ elif [ "$command" = "embeddings-gpu" ]; then
         sudo docker run -it --entrypoint "python" -v /data:/data -u root --env PORT=$DB_PORT --env CONFIG_FILE=$CONFIG_FILE --env LICENSING=$LICENSING --env CHEESE_LICENSE_FILE=$LICENSE_FILE --rm $DB_IMAGE -c 'import cheese_database.cheese_cli as cli; cli.app()' $ALL_ARGS
     else
     cheese-embeddings --input_file $input_file --dest $dest --gpu_device $gpu_device;
-    # echo "Embeddings computation complete ! You can find the results here : /data/"$dest;
     fi
 else
     sudo docker run -it --entrypoint "python" -v /data:/data -u root --env PORT=$DB_PORT --env CONFIG_FILE=$CONFIG_FILE --env LICENSING=$LICENSING --env CHEESE_LICENSE_FILE=$LICENSE_FILE --rm $DB_IMAGE -c 'import cheese_database.cheese_cli as cli; cli.app()' $ALL_ARGS
