@@ -11,7 +11,7 @@ echo "Running cheese UI .."
 sudo docker run -d -u root --env CHEESE_API="http://"$IP":$API_PORT"  --name ui -p $UI_PORT:3000 --rm $UI_IMAGE
 
 echo "Running cheese API..."
-sudo docker run -d -v /data:/data -it -u root --env PORT=$API_PORT --env CONFIG_FILE=$CONFIG_FILE --env LICENSING=$LICENSING --env CHEESE_LICENSE_FILE=$LICENSE_FILE --name api -p $API_PORT:$API_PORT --rm $API_IMAGE
+sudo docker run -d -v /data:/data -it -u root --env $API_URL --env $UI_URL --env PORT=$API_PORT --env CONFIG_FILE=$CONFIG_FILE --env LICENSING=$LICENSING --env CHEESE_LICENSE_FILE=$LICENSE_FILE --name api -p $API_PORT:$API_PORT --rm $API_IMAGE
 
 
 echo "Running cheese DOCS..."
