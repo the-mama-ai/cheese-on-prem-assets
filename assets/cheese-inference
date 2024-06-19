@@ -50,10 +50,26 @@ else
 GPU_DEVICE=$gpu_device
 fi
 
+# Specify SMILES validation
+if (( $canonicalize_smiles == "")); then
+    CANONICAL_SMI="true"
+
+else
+CANONICAL_SMI=$canonicalize_smiles
+fi
+
+# Specify SMILES canonicalization
+if (( $validate_smiles == "")); then
+    VALIDATE_SMI="true"
+
+else
+VALIDATE_SMI=$validate_smiles
+fi
+
 
 CHUNK_SIZE=100000  # Chunk size for embeddings computation
 
 echo "Running CHEESE inference..."
 echo "Making output directory"
 mkdir $OUTPUT_DIRECTORY
-sudo docker run -u root -v /data:/data -it CHEESE_LICENSE_FILE=$LICENSE_FILE --env LICENSING=$LICENSING --gpus all --rm $INFERENCE_IMAGE --index_type $INDEX_TYPE --input_file $INPUT_FILE --extension $EXTENSION --delimiter $DELIMITER --output_directory $OUTPUT_DIRECTORY --gpu_device_id $GPU_DEVICE --batch_size $BATCH_SIZE --chunk_size $CHUNK_SIZE
+sudo docker run -u root -v /data:/data -it CHEESE_LICENSE_FILE=$LICENSE_FILE --env LICENSING=$LICENSING --gpus all --rm $INFERENCE_IMAGE --index_type $INDEX_TYPE --input_file $INPUT_FILE --extension $EXTENSION --delimiter $DELIMITER --output_directory $OUTPUT_DIRECTORY --gpu_device_id $GPU_DEVICE --batch_size $BATCH_SIZE --chunk_size $CHUNK_SIZE --validate_smiles $VALIDATE_SMI --canonicalize_smiles $CANONICAL_SMI
