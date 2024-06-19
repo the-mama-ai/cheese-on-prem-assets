@@ -24,7 +24,7 @@ INPUT_FILE="/data/"$input_file
 INDEX_TYPE="in_memory"
 
 # Specify GPU device
-if (( $gpu_device == "")); then
+if [ "$gpu_device" = "" ]; then
     GPU_DEVICE="0"
 
 else
