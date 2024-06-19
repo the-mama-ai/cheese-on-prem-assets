@@ -56,4 +56,4 @@ echo "Running CHEESE inference..."
 echo "Making output directory"
 echo GPU $gpu_device index_type $index_type validate_smiles $validate_smiles canonicalize_smiles $canonicalize_smiles
 mkdir $OUTPUT_DIRECTORY
-sudo docker run -u root -v /data:/data -it CHEESE_LICENSE_FILE=$LICENSE_FILE --env LICENSING=$LICENSING --gpus all --rm $INFERENCE_IMAGE --index_type $INDEX_TYPE --input_file $input_file --extension $EXTENSION --delimiter $DELIMITER --output_directory $OUTPUT_DIRECTORY --gpu_device_id $GPU_DEVICE --batch_size $BATCH_SIZE --chunk_size $CHUNK_SIZE --validate_smiles $validate_smiles --canonicalize_smiles $canonicalize_smiles
+sudo docker run -u root -v /data:/data -it CHEESE_LICENSE_FILE=$LICENSE_FILE --env LICENSING=$LICENSING --gpus all --rm $INFERENCE_IMAGE --index_type $INDEX_TYPE --input_file $input_file --extension $EXTENSION --delimiter $DELIMITER --output_directory $OUTPUT_DIRECTORY --gpu_device_id $GPU_DEVICE --batch_size $BATCH_SIZE --chunk_size $CHUNK_SIZE --validate_smiles $valid_smiles --canonicalize_smiles $canonical_smiles
