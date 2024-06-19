@@ -19,8 +19,6 @@ BATCH_SIZE=128
 
 OUTPUT_DIRECTORY="/data/output"
 
-INPUT_FILE="/data/"$input_file
-
 MAXSIZE=2000
 
 # Get file size
@@ -72,4 +70,4 @@ CHUNK_SIZE=100000  # Chunk size for embeddings computation
 echo "Running CHEESE inference..."
 echo "Making output directory"
 mkdir $OUTPUT_DIRECTORY
-sudo docker run -u root -v /data:/data -it CHEESE_LICENSE_FILE=$LICENSE_FILE --env LICENSING=$LICENSING --gpus all --rm $INFERENCE_IMAGE --index_type $INDEX_TYPE --input_file $INPUT_FILE --extension $EXTENSION --delimiter $DELIMITER --output_directory $OUTPUT_DIRECTORY --gpu_device_id $GPU_DEVICE --batch_size $BATCH_SIZE --chunk_size $CHUNK_SIZE --validate_smiles $VALIDATE_SMI --canonicalize_smiles $CANONICAL_SMI
+sudo docker run -u root -v /data:/data -it CHEESE_LICENSE_FILE=$LICENSE_FILE --env LICENSING=$LICENSING --gpus all --rm $INFERENCE_IMAGE --index_type $INDEX_TYPE --input_file $input_file --extension $EXTENSION --delimiter $DELIMITER --output_directory $OUTPUT_DIRECTORY --gpu_device_id $GPU_DEVICE --batch_size $BATCH_SIZE --chunk_size $CHUNK_SIZE --validate_smiles $VALIDATE_SMI --canonicalize_smiles $CANONICAL_SMI
