@@ -22,5 +22,3 @@ INDEX_TYPES:
   CUSTOM: "in_memory"
 
 
-DEVICE: "cuda"
-
