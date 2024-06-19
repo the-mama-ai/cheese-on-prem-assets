@@ -17,10 +17,14 @@ do
 help=$x;
 if [ "$x" = "--validate_smiles" ]; then
     validate_smiles="true" ; 
+else
+    validate_smiles="false" ; 
 fi
 
 if [ "$x" = "--canonicalize_smiles" ]; then
     canonicalize_smiles="true" ; 
+else 
+    canonicalize_smiles="false" ; 
 fi
 
 done

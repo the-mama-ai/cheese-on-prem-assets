@@ -27,7 +27,7 @@ FILESIZE=$(du $input_file | awk '{print $1}')
 # Checkpoint
 echo "Size of $input_file = $FILESIZE KB."
 
-if (( $index_type = "")); then
+if (($index_type = "")); then
 
     if (( FILESIZE > MAXSIZE)); then
         INDEX_TYPE="clustered"
@@ -41,28 +41,13 @@ INDEX_TYPE=$index_type
 fi
 
 # Specify GPU device
-if (( $gpu_device = "")); then
+if (($gpu_device = "")); then
     GPU_DEVICE="0"
 
 else
 GPU_DEVICE=$gpu_device
 fi
 
-# Specify SMILES validation
-if (( $canonicalize_smiles = "")); then
-    CANONICAL_SMI="true"
-
-else
-CANONICAL_SMI=$canonicalize_smiles
-fi
-
-# Specify SMILES canonicalization
-if (( $validate_smiles = "")); then
-    VALIDATE_SMI="true"
-
-else
-VALIDATE_SMI=$validate_smiles
-fi
 
 
 CHUNK_SIZE=100000  # Chunk size for embeddings computation
@@ -70,4 +55,4 @@ CHUNK_SIZE=100000  # Chunk size for embeddings computation
 echo "Running CHEESE inference..."
 echo "Making output directory"
 mkdir $OUTPUT_DIRECTORY
-sudo docker run -u root -v /data:/data -it CHEESE_LICENSE_FILE=$LICENSE_FILE --env LICENSING=$LICENSING --gpus all --rm $INFERENCE_IMAGE --index_type $INDEX_TYPE --input_file $input_file --extension $EXTENSION --delimiter $DELIMITER --output_directory $OUTPUT_DIRECTORY --gpu_device_id $GPU_DEVICE --batch_size $BATCH_SIZE --chunk_size $CHUNK_SIZE --validate_smiles $VALIDATE_SMI --canonicalize_smiles $CANONICAL_SMI
+sudo docker run -u root -v /data:/data -it CHEESE_LICENSE_FILE=$LICENSE_FILE --env LICENSING=$LICENSING --gpus all --rm $INFERENCE_IMAGE --index_type $INDEX_TYPE --input_file $input_file --extension $EXTENSION --delimiter $DELIMITER --output_directory $OUTPUT_DIRECTORY --gpu_device_id $GPU_DEVICE --batch_size $BATCH_SIZE --chunk_size $CHUNK_SIZE --validate_smiles $validate_smiles --canonicalize_smiles $canonicalize_smiles
