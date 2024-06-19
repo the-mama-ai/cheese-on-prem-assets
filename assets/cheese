@@ -12,19 +12,18 @@ while [ $# -gt 0 ]; do
     shift
 done
 
+VALIDATE_SMILES="false"
+CANONICALIZE_SMILES="false"
 for x in $ALL_ARGS
 do 
 help=$x;
+
 if [ "$x" = "--validate_smiles" ]; then
-    validate_smiles="true" ; 
-else
-    validate_smiles="false" ; 
+    VALIDATE_SMILES="true" ; 
 fi
 
 if [ "$x" = "--canonicalize_smiles" ]; then
-    canonicalize_smiles="true" ; 
-else 
-    canonicalize_smiles="false" ; 
+    CANONICALIZE_SMILES="true" ; 
 fi
 
 done
@@ -37,7 +36,7 @@ elif [ "$command" = "inference" ]; then
     if [ "$help" = "--help" ]; then
         sudo docker run -it --entrypoint "python" -v /data:/data -u root --env PORT=$DB_PORT --env CONFIG_FILE=$CONFIG_FILE --env LICENSING=$LICENSING --env CHEESE_LICENSE_FILE=$LICENSE_FILE --rm $DB_IMAGE -c 'import cheese_database.cheese_cli as cli; cli.app()' $ALL_ARGS
     else
-        cheese-inference --input_file $input_file --gpu_device $gpu_device --validate_smiles $validate_smiles --canonicalize_smiles $canonicalize_smiles
+        cheese-inference --input_file $input_file --gpu_device $gpu_device --validate_smiles $VALIDATE_SMILES --canonicalize_smiles $CANONICALIZE_SMILES
     fi
 
 elif [ "$command" = "embeddings-gpu" ]; then
