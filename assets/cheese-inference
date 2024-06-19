@@ -29,18 +29,31 @@ FILESIZE=$(du $INPUT_FILE | awk '{print $1}')
 # Checkpoint
 echo "Size of $INPUT_FILE = $FILESIZE KB."
 
-# The following doesn't work
-if (( FILESIZE > MAXSIZE)); then
-    INDEX_TYPE="clustered"
+if (( $index_type == "")); then
+
+    if (( FILESIZE > MAXSIZE)); then
+        INDEX_TYPE="clustered"
+    else
+        INDEX_TYPE="in_memory"
+    fi
+
 else
-    INDEX_TYPE="in_memory"
+INDEX_TYPE=$index_type
+
+fi
+
+# Specify GPU device
+if (( $gpu_device == "")); then
+    GPU_DEVICE="0"
+
+else
+GPU_DEVICE=$gpu_device
 fi
 
 
-GPU_DEVICE_ID=0
 CHUNK_SIZE=100000  # Chunk size for embeddings computation
 
 echo "Running CHEESE inference..."
 echo "Making output directory"
 mkdir $OUTPUT_DIRECTORY
-# sudo docker run -u root -v /data:/data -it CHEESE_LICENSE_FILE=$LICENSE_FILE --env LICENSING=$LICENSING --gpus all --rm $INFERENCE_IMAGE --index_type $INDEX_TYPE --input_file $INPUT_FILE --extension $EXTENSION --delimiter $DELIMITER --output_directory $OUTPUT_DIRECTORY --gpu_device_id $GPU_DEVICE_ID --batch_size $BATCH_SIZE --chunk_size $CHUNK_SIZE
+sudo docker run -u root -v /data:/data -it CHEESE_LICENSE_FILE=$LICENSE_FILE --env LICENSING=$LICENSING --gpus all --rm $INFERENCE_IMAGE --index_type $INDEX_TYPE --input_file $INPUT_FILE --extension $EXTENSION --delimiter $DELIMITER --output_directory $OUTPUT_DIRECTORY --gpu_device_id $GPU_DEVICE --batch_size $BATCH_SIZE --chunk_size $CHUNK_SIZE

@@ -51,6 +51,9 @@ sudo chmod +x /usr/local/bin/cheese
 sudo cp cheese-inference /usr/local/bin
 sudo chmod +x /usr/local/bin/cheese-inference
 
+sudo cp cheese-embeddings /usr/local/bin
+sudo chmod +x /usr/local/bin/cheese-embeddings
+
 sudo cp cheese-app /usr/local/bin
 sudo chmod +x /usr/local/bin/cheese-app
 

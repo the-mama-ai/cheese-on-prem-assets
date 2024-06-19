@@ -1,0 +1,39 @@
+#!/bin/bash
+while [ $# -gt 0 ]; do
+    if [[ $1 == "--"* ]]; then
+        v="${1/--/}"
+        declare "$v"="$2"
+        shift
+    fi
+    shift
+done
+
+
+update-cheese
+
+EXTENSION=".csv"
+DELIMITER=","
+
+DEVICE="cuda"
+BATCH_SIZE=128
+
+OUTPUT_DIRECTORY="/data/"$dest
+
+INPUT_FILE="/data/"$input_file
+
+INDEX_TYPE="in_memory"
+
+# Specify GPU device
+if (( $gpu_device == "")); then
+    GPU_DEVICE="0"
+
+else
+GPU_DEVICE=$gpu_device
+fi
+
+CHUNK_SIZE=100000  # Chunk size for embeddings computation
+
+echo "Running CHEESE embeddings computation..."
+echo "Making output directory"
+mkdir $OUTPUT_DIRECTORY
+sudo docker run -u root -v /data:/data -it CHEESE_LICENSE_FILE=$LICENSE_FILE --env LICENSING=$LICENSING --gpus all --rm $INFERENCE_IMAGE --index_type $INDEX_TYPE --input_file $INPUT_FILE --extension $EXTENSION --delimiter $DELIMITER --output_directory $OUTPUT_DIRECTORY --gpu_device_id $GPU_DEVICE --batch_size $BATCH_SIZE --chunk_size $CHUNK_SIZE --process_file "true" --embeddings_computation "true" --make_indexes "false" --balance_clusters "false" --save_npy "true"
