@@ -46,20 +46,8 @@ FULL_IMAGE_NAME=$REPO_NAME"/cheese-docs:"$customer
 echo "export DOCS_IMAGE=${FULL_IMAGE_NAME}" >> ~/.bashrc 
 
 source ~/.bashrc
-sudo cp cheese /usr/local/bin
-sudo chmod +x /usr/local/bin/cheese
 
-sudo cp cheese-inference /usr/local/bin
-sudo chmod +x /usr/local/bin/cheese-inference
-
-sudo cp cheese-embeddings /usr/local/bin
-sudo chmod +x /usr/local/bin/cheese-embeddings
-
-sudo cp cheese-app /usr/local/bin
-sudo chmod +x /usr/local/bin/cheese-app
-
-sudo cp update-cheese /usr/local/bin
-sudo chmod +x /usr/local/bin/update-cheese
+bash update-cheese.sh
 
 
-update-cheese
+
