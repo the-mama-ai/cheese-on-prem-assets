@@ -1,6 +1,4 @@
 #!/bin/sh
-update-cheese
-
 DB_URL="http://"$IP":$DB_PORT"
 API_URL="https://"$IP":$API_PORT"
 UI_URL="http://"$IP":$UI_PORT"

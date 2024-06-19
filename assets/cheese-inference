@@ -9,8 +9,6 @@ while [ $# -gt 0 ]; do
 done
 
 
-update-cheese
-
 EXTENSION=".csv"
 DELIMITER=","
 
