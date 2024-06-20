@@ -1,5 +1,9 @@
 #!/bin/sh
 # Login to Azure CR
+cd $ASSETS_FOLDER
+cd..
+git pull
+
 sudo cp $ASSETS_FOLDER/cheese /usr/local/bin
 sudo chmod +x /usr/local/bin/cheese
 
