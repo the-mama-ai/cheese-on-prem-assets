@@ -15,8 +15,6 @@ DELIMITER=","
 DEVICE="cuda"
 BATCH_SIZE=128
 
-OUTPUT_DIRECTORY="/data/output"
-
 MAXSIZE=2000
 
 # Get file size
@@ -46,12 +44,20 @@ else
 GPU_DEVICE=$gpu_device
 fi
 
+# Specify destination folder
+if [ "$dest" = "" ]; then
+    OUTPUT_DIRECTORY="/data/output"
+else
+    OUTPUT_DIRECTORY=$dest
+
+fi
+
 
 
 CHUNK_SIZE=100000  # Chunk size for embeddings computation
 
 echo "Running CHEESE inference..."
+echo "Saving outputs to $OUTPUT_DIRECTORY"
 echo "Making output directory $OUTPUT_DIRECTORY"
-# echo GPU $gpu_device index_type $INDEX_TYPE validate_smiles $valid_smiles canonicalize_smiles $canonical_smiles
 mkdir $OUTPUT_DIRECTORY
 sudo docker run -u root -v /data:/data -it --env CHEESE_LICENSE_FILE=$LICENSE_FILE --env LICENSING=$LICENSING --gpus all --rm $INFERENCE_IMAGE --index_type $INDEX_TYPE --input_file $input_file --extension $EXTENSION --delimiter $DELIMITER --output_directory $OUTPUT_DIRECTORY --gpu_device_id $GPU_DEVICE --batch_size $BATCH_SIZE --chunk_size $CHUNK_SIZE --validate_smiles $valid_smiles --canonicalize_smiles $canonical_smiles

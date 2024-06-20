@@ -15,9 +15,8 @@ DELIMITER=","
 DEVICE="cuda"
 BATCH_SIZE=128
 
-OUTPUT_DIRECTORY="/data/"$dest
 
-INPUT_FILE="/data/"$input_file
+INPUT_FILE=$input_file
 
 INDEX_TYPE="in_memory"
 
@@ -27,6 +26,14 @@ if [ "$gpu_device" = "" ]; then
 
 else
 GPU_DEVICE=$gpu_device
+fi
+
+# Specify destination folder
+if [ "$dest" = "" ]; then
+    OUTPUT_DIRECTORY="/data/output"
+else
+    OUTPUT_DIRECTORY=$dest
+
 fi
 
 CHUNK_SIZE=100000  # Chunk size for embeddings computation
