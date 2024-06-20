@@ -47,7 +47,9 @@ echo "export DOCS_IMAGE=${FULL_IMAGE_NAME}" >> ~/.bashrc
 
 source ~/.bashrc
 
-bash update-cheese.sh
+sudo cp $ASSETS_FOLDER/update-cheese /usr/local/bin
+sudo chmod +x /usr/local/bin/update-cheese
 
+update-cheese
 
 

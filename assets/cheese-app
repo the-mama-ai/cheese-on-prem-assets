@@ -10,7 +10,7 @@ sudo docker run -d -v /data:/data -u root --env PORT=$DB_PORT --env CONFIG_FILE=
 sudo python3 $ASSETS_FOLDER"/check_database_server.py" --ip $IP --db_port $DB_PORT
 
 echo "Running cheese UI .."
-sudo docker run -d -u root --env CHEESE_API=$API_URL  --name ui -p $UI_PORT:3000 --rm $UI_IMAGE
+sudo docker run -d -u root --env CHEESE_API=$API_URL --name ui -p $UI_PORT:3000 --rm $UI_IMAGE
 
 echo "Running cheese API..."
 sudo docker run -d -v /data:/data -it -u root --env API_URL=$DB_URL --env UI_URL=$UI_URL --env PORT=$API_PORT --env CONFIG_FILE=$CONFIG_FILE --env LICENSING=$LICENSING --env CHEESE_LICENSE_FILE=$LICENSE_FILE --name api -p $API_PORT:$API_PORT --rm $API_IMAGE

@@ -11,11 +11,11 @@ for x in $ALL_ARGS
 do 
 HELP=$x;
 
-if [ "$x" = "--validate_smiles" ]; then
+if [ "$x" = "--validate-smiles" ]; then
     VALIDATE_SMILES="true" ; 
 fi
 
-if [ "$x" = "--canonicalize_smiles" ]; then
+if [ "$x" = "--canonicalize-smiles" ]; then
     CANONICALIZE_SMILES="true" ; 
 fi
 
@@ -34,6 +34,10 @@ done
 
 if [ "$command" = "start-app" ]; then
     cheese-app
+
+elif [ "$command" = "update" ]; then
+    update-cheese
+
 elif [ "$command" = "inference" ]; then
     if [ "$HELP" = "--help" ]; then
         sudo docker run -it --entrypoint "python" -v /data:/data -u root --env PORT=$DB_PORT --env CONFIG_FILE=$CONFIG_FILE --env LICENSING=$LICENSING --env CHEESE_LICENSE_FILE=$LICENSE_FILE --rm $DB_IMAGE -c 'import cheese_database.cheese_cli as cli; cli.app();' $ALL_ARGS
