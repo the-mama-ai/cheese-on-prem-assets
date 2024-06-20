@@ -1,5 +1,6 @@
 #!/bin/sh
 # Login to Azure CR
+echo "Pulling from repo"
 cd $ASSETS_FOLDER
 cd ..
 git pull
