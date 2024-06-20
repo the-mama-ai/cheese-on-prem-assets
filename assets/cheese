@@ -32,7 +32,7 @@ done
 
 
 
-if [ "$command" = "start-app" ]; then
+if [ "$command" = "start_app" ]; then
     cheese-app
 
 elif [ "$command" = "update" ]; then
@@ -45,7 +45,7 @@ elif [ "$command" = "inference" ]; then
         cheese-inference --input_file $input_file --gpu_device $gpu_device --valid_smiles $VALIDATE_SMILES --canonical_smiles $CANONICALIZE_SMILES --index_type $index_type
     fi
 
-elif [ "$command" = "embeddings-gpu" ]; then
+elif [ "$command" = "embeddings_gpu" ]; then
     if [ "$HELP" = "--help" ]; then
         sudo docker run -it --entrypoint "python" -v /data:/data -u root --env PORT=$DB_PORT --env CONFIG_FILE=$CONFIG_FILE --env LICENSING=$LICENSING --env CHEESE_LICENSE_FILE=$LICENSE_FILE --rm $DB_IMAGE -c 'import cheese_database.cheese_cli as cli; cli.app();' $ALL_ARGS
     else
