@@ -3,7 +3,9 @@ DB_URL="http://"$IP":$DB_PORT"
 API_URL="http://"$IP":$API_PORT"
 UI_URL="http://"$IP":$UI_PORT"
 
+echo "Removing existing containers"
 docker rm -f api ui db cheese_docs
+
 echo "Running cheese database server..."
 sudo docker run -d -v /data:/data -u root --env PORT=$DB_PORT --env CONFIG_FILE=$CONFIG_FILE --env LICENSING=$LICENSING --env CHEESE_LICENSE_FILE=$LICENSE_FILE --name db -p $DB_PORT:$DB_PORT --rm $DB_IMAGE
 
