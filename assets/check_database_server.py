@@ -11,8 +11,6 @@ parser.add_argument('--ip', type=str, help='IP address')
 parser.add_argument('--db_port', type=str, help='PORT of the API')
 args = parser.parse_args()
 
-time.sleep(10)
-
 
 
 
@@ -20,9 +18,17 @@ time.sleep(10)
 success=False
 db_container_state=True
 
+
+
+
 try:
     while ((not success) and db_container_state):
-        state = subprocess.check_output("""docker container inspect -f '{{.State.Running}}' db""", shell=True)
+        try:
+            state=subprocess.check_output("""docker container inspect -f '{{.State.Running}}' db""", shell=True)
+        except subprocess.CalledProcessError as e:
+            print("Database server is down !!!")
+            sys.exit(0)
+
 
         db_container_state = state.decode("utf-8").strip()=="true"
         try:
