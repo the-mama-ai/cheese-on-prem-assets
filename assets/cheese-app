@@ -19,7 +19,7 @@ sudo docker run -d -v /data:/data -it -u root --env API_URL=$DB_URL --env UI_URL
 echo "Running cheese DOCS..."
 sudo docker run -d --name cheese_docs -p 9010:9010 --rm $DOCS_IMAGE
 
-API_FOR_DOCS="!!swagger-http https://"$IP":"$API_PORT"/openapi.json!!"
+API_FOR_DOCS="!!swagger-http http://"$IP":"$API_PORT"/openapi.json!!"
 
 rm -f index.md
 echo $API_FOR_DOCS > index.md
