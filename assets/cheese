@@ -64,18 +64,18 @@ elif [ "$command" = "update" ]; then
 
 elif [ "$command" = "inference" ]; then
     if [ "$HELP" = "--help" ]; then
-        docker run -it --entrypoint "python" -v $SOURCE_DIR:$DEST_DIR --env PORT=$DB_PORT --env CONFIG_FILE=$CONFIG_FILE --env LICENSING=$LICENSING --env CHEESE_LICENSE_FILE=$LICENSE_FILE --rm $DB_IMAGE -c 'import cheese_database.cheese_cli as cli; cli.app();' $ALL_ARGS
+        docker run -u $UID -it --entrypoint "python" -v $SOURCE_DIR:$DEST_DIR --env PORT=$DB_PORT --env CONFIG_FILE=$CONFIG_FILE --env LICENSING=$LICENSING --env CHEESE_LICENSE_FILE=$LICENSE_FILE --rm $DB_IMAGE -c 'import cheese_database.cheese_cli as cli; cli.app();' $ALL_ARGS
     else
         cheese-inference --input_file $input_file --dest $INFERENCE_OUTPUT_DIR --gpu_devices $GPU_DEVICES --valid_smiles $VALIDATE_SMILES --canonical_smiles $CANONICALIZE_SMILES --index_type $index_type
     fi
 
 elif [ "$command" = "embeddings_gpu" ]; then
     if [ "$HELP" = "--help" ]; then
-        docker run -it --entrypoint "python" -v $SOURCE_DIR:$DEST_DIR --env PORT=$DB_PORT --env CONFIG_FILE=$CONFIG_FILE --env LICENSING=$LICENSING --env CHEESE_LICENSE_FILE=$LICENSE_FILE --rm $DB_IMAGE -c 'import cheese_database.cheese_cli as cli; cli.app();' $ALL_ARGS
+        docker run -u $UID -it --entrypoint "python" -v $SOURCE_DIR:$DEST_DIR --env PORT=$DB_PORT --env CONFIG_FILE=$CONFIG_FILE --env LICENSING=$LICENSING --env CHEESE_LICENSE_FILE=$LICENSE_FILE --rm $DB_IMAGE -c 'import cheese_database.cheese_cli as cli; cli.app();' $ALL_ARGS
     else
         cheese-embeddings --input_file $input_file --dest $INFERENCE_OUTPUT_DIR --search_type $SEARCH_TYPE --gpu_devices $GPU_DEVICES --save_format $save_format;
     fi
 
 else
-    docker run -it --entrypoint "python" -v $SOURCE_DIR:$DEST_DIR --env PORT=$DB_PORT --env CONFIG_FILE=$CONFIG_FILE --env LICENSING=$LICENSING --env CHEESE_LICENSE_FILE=$LICENSE_FILE --rm $DB_IMAGE -c 'import cheese_database.cheese_cli as cli; cli.app();' $ALL_ARGS
+    docker run -u $UID -it --entrypoint "python" -v $SOURCE_DIR:$DEST_DIR --env PORT=$DB_PORT --env CONFIG_FILE=$CONFIG_FILE --env LICENSING=$LICENSING --env CHEESE_LICENSE_FILE=$LICENSE_FILE --rm $DB_IMAGE -c 'import cheese_database.cheese_cli as cli; cli.app();' $ALL_ARGS
 fi
