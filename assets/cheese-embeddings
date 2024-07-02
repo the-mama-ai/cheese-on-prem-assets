@@ -36,7 +36,7 @@ OUTPUT_DIRECTORY=$DEST_DIR"/"$dest
 NEW_OUTPUT_DIRECTORY=$SOURCE_DIR"/"$dest
 echo Saving outputs to $NEW_OUTPUT_DIRECTORY
 mkdir $NEW_OUTPUT_DIRECTORY
-docker run -v $SOURCE_DIR:$DEST_DIR -it --env CHEESE_LICENSE_FILE=$LICENSE_FILE --env LICENSING=$LICENSING --gpus all --rm $INFERENCE_IMAGE --index_type $INDEX_TYPE --input_file $INPUT_FILE --extension $EXTENSION --delimiter $DELIMITER --output_directory $OUTPUT_DIRECTORY --gpu_device_ids $gpu_devices --batch_size $BATCH_SIZE --chunk_size $CHUNK_SIZE --process_file "true" --embeddings_computation "true" --make_indexes "false" --balance_clusters "false" --save_format $SAVE_FORMAT
+docker run -u user -v $SOURCE_DIR:$DEST_DIR -it --env CHEESE_LICENSE_FILE=$LICENSE_FILE --env LICENSING=$LICENSING --gpus all --rm $INFERENCE_IMAGE --index_type $INDEX_TYPE --input_file $INPUT_FILE --extension $EXTENSION --delimiter $DELIMITER --output_directory $OUTPUT_DIRECTORY --gpu_device_ids $gpu_devices --batch_size $BATCH_SIZE --chunk_size $CHUNK_SIZE --process_file "true" --embeddings_computation "true" --make_indexes "false" --balance_clusters "false" --save_format $SAVE_FORMAT
 mv $NEW_OUTPUT_DIRECTORY $NEW_OUTPUT_DIRECTORY"_new"
 mv $NEW_OUTPUT_DIRECTORY"_new/embeddings" $NEW_OUTPUT_DIRECTORY
 rm -rf $NEW_OUTPUT_DIRECTORY"_new"
