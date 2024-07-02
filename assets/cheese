@@ -31,9 +31,9 @@ while [ $# -gt 0 ]; do
 done
 
 if [ "$dest" = "" ]; then
-    INFERENCE_OUTPUT_DIR="/data/output"
+    INFERENCE_OUTPUT_DIR="output"
 else
-    INFERENCE_OUTPUT_DIR=$DEST_DIR"/"$dest
+    INFERENCE_OUTPUT_DIR=$dest
 
 fi
 
