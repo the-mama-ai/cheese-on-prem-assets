@@ -17,11 +17,14 @@ BATCH_SIZE=1024
 
 MAXSIZE=2000000
 
+INPUT_FILE=$SOURCE_DIR"/"$input_file
+DEST_INPUT_FILE=$DEST_DIR"/"$input_file
+
 # Get file size
-echo Getting file size of $input_file
-FILESIZE=$(du $input_file | awk '{print $1}')
+echo Getting file size of $INPUT_FILE
+FILESIZE=$(du $INPUT_FILE | awk '{print $1}')
 # Checkpoint
-echo "Size of $input_file = $FILESIZE KB."
+echo "Size of $INPUT_FILE = $FILESIZE KB."
 
 if [ "$index_type" = "auto" ] ||  [ "$index_type" = "" ]; then
 
@@ -36,28 +39,12 @@ INDEX_TYPE=$index_type
 
 fi
 
-# Specify GPU device
-if [ "$gpu_device" = "" ]; then
-    GPU_DEVICE="0"
-
-else
-GPU_DEVICE=$gpu_device
-fi
-
-# Specify destination folder
-if [ "$dest" = "" ]; then
-    OUTPUT_DIRECTORY="/data/output"
-else
-    OUTPUT_DIRECTORY=$dest
-
-fi
-
 
 
 CHUNK_SIZE=100000  # Chunk size for embeddings computation
 
 echo "Running CHEESE inference..."
-echo "Saving outputs to $OUTPUT_DIRECTORY"
-echo "Making output directory $OUTPUT_DIRECTORY"
-mkdir $OUTPUT_DIRECTORY
-sudo docker run -u root -v /data:/data -it --env CHEESE_LICENSE_FILE=$LICENSE_FILE --env LICENSING=$LICENSING --gpus all --rm $INFERENCE_IMAGE --index_type $INDEX_TYPE --input_file $input_file --extension $EXTENSION --delimiter $DELIMITER --output_directory $OUTPUT_DIRECTORY --gpu_device_id $GPU_DEVICE --batch_size $BATCH_SIZE --chunk_size $CHUNK_SIZE --validate_smiles $valid_smiles --canonicalize_smiles $canonical_smiles
+echo "Saving outputs to $dest"
+echo "Making output directory $dest"
+mkdir $dest
+sudo docker run -v $SOURCE_DIR:$DEST_DIR -it --env CHEESE_LICENSE_FILE=$LICENSE_FILE --env LICENSING=$LICENSING --gpus all --rm $INFERENCE_IMAGE --index_type $INDEX_TYPE --input_file $DEST_INPUT_FILE --extension $EXTENSION --delimiter $DELIMITER --output_directory $dest --gpu_device_ids $gpu_devices --batch_size $BATCH_SIZE --chunk_size $CHUNK_SIZE --validate_smiles $valid_smiles --canonicalize_smiles $canonical_smiles

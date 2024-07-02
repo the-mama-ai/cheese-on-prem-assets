@@ -11,11 +11,11 @@ for x in $ALL_ARGS
 do 
 HELP=$x;
 
-if [ "$x" = "--validate-smiles" ]; then
+if [ "$x" = "--validate_smiles" ]; then
     VALIDATE_SMILES="true" ; 
 fi
 
-if [ "$x" = "--canonicalize-smiles" ]; then
+if [ "$x" = "--canonicalize_smiles" ]; then
     CANONICALIZE_SMILES="true" ; 
 fi
 
@@ -30,6 +30,30 @@ while [ $# -gt 0 ]; do
     shift
 done
 
+if [ "$dest" = "" ]; then
+    INFERENCE_OUTPUT_DIR="/data/output"
+else
+    INFERENCE_OUTPUT_DIR=$DEST_DIR"/"$dest
+
+fi
+
+# Specify GPU device
+if [ "$gpu_devices" = "" ]; then
+    GPU_DEVICES="0"
+
+else
+    GPU_DEVICES=$gpu_devices
+fi
+
+# Specify Search type for cheese-embeddings
+if [ "$search_type" = "" ]; then
+    SEARCH_TYPE="all"
+
+else
+    SEARCH_TYPE=$search_type
+fi
+
+
 
 
 if [ "$command" = "start_app" ]; then
@@ -40,17 +64,18 @@ elif [ "$command" = "update" ]; then
 
 elif [ "$command" = "inference" ]; then
     if [ "$HELP" = "--help" ]; then
-        sudo docker run -it --entrypoint "python" -v /data:/data -u root --env PORT=$DB_PORT --env CONFIG_FILE=$CONFIG_FILE --env LICENSING=$LICENSING --env CHEESE_LICENSE_FILE=$LICENSE_FILE --rm $DB_IMAGE -c 'import cheese_database.cheese_cli as cli; cli.app();' $ALL_ARGS
+        docker run -it --entrypoint "python" -v $SOURCE_DIR:$DEST_DIR --env PORT=$DB_PORT --env CONFIG_FILE=$CONFIG_FILE --env LICENSING=$LICENSING --env CHEESE_LICENSE_FILE=$LICENSE_FILE --rm $DB_IMAGE -c 'import cheese_database.cheese_cli as cli; cli.app();' $ALL_ARGS
     else
-        cheese-inference --input_file $input_file --dest $dest --valid_smiles $VALIDATE_SMILES --canonical_smiles $CANONICALIZE_SMILES --index_type $index_type
+        cheese-inference --input_file $input_file --dest $INFERENCE_OUTPUT_DIR --gpu_devices $GPU_DEVICES --valid_smiles $VALIDATE_SMILES --canonical_smiles $CANONICALIZE_SMILES --index_type $index_type
     fi
 
 elif [ "$command" = "embeddings_gpu" ]; then
     if [ "$HELP" = "--help" ]; then
-        sudo docker run -it --entrypoint "python" -v /data:/data -u root --env PORT=$DB_PORT --env CONFIG_FILE=$CONFIG_FILE --env LICENSING=$LICENSING --env CHEESE_LICENSE_FILE=$LICENSE_FILE --rm $DB_IMAGE -c 'import cheese_database.cheese_cli as cli; cli.app();' $ALL_ARGS
+        docker run -it --entrypoint "python" -v $SOURCE_DIR:$DEST_DIR --env PORT=$DB_PORT --env CONFIG_FILE=$CONFIG_FILE --env LICENSING=$LICENSING --env CHEESE_LICENSE_FILE=$LICENSE_FILE --rm $DB_IMAGE -c 'import cheese_database.cheese_cli as cli; cli.app();' $ALL_ARGS
     else
-        cheese-embeddings --input_file $input_file --dest $dest --save_format $save_format;
+        cheese-embeddings --input_file $input_file --dest $INFERENCE_OUTPUT_DIR --search_type $SEARCH_TYPE --gpu_devices $GPU_DEVICES --save_format $save_format;
     fi
+
 else
-    sudo docker run -it --entrypoint "python" -v /data:/data -u root --env PORT=$DB_PORT --env CONFIG_FILE=$CONFIG_FILE --env LICENSING=$LICENSING --env CHEESE_LICENSE_FILE=$LICENSE_FILE --rm $DB_IMAGE -c 'import cheese_database.cheese_cli as cli; cli.app();' $ALL_ARGS
+    docker run -it --entrypoint "python" -v $SOURCE_DIR:$DEST_DIR --env PORT=$DB_PORT --env CONFIG_FILE=$CONFIG_FILE --env LICENSING=$LICENSING --env CHEESE_LICENSE_FILE=$LICENSE_FILE --rm $DB_IMAGE -c 'import cheese_database.cheese_cli as cli; cli.app();' $ALL_ARGS
 fi

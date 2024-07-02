@@ -17,14 +17,16 @@ ui_port=9003
 
 # Define global environment variables
 
+echo "export SOURCE_DIR=${source_dir}" >> ~/.bashrc 
+echo "export DEST_DIR=/data" >> ~/.bashrc 
 echo "export CHEESE_CUSTOMER=${customer}" >> ~/.bashrc 
 echo "export CHEESE_PASSWORD=${password}" >> ~/.bashrc 
 echo "export REPO_NAME='themamaai.azurecr.io/cheese'" >> ~/.bashrc 
-echo "export LICENSE_FILE='/data/cheese_license_file.json'" >> ~/.bashrc 
-echo "export CONFIG_FILE='/data/cheese_config_file.yaml'" >> ~/.bashrc 
+echo "export LICENSE_FILE='${DEST_DIR}/cheese_license_file.json'" >> ~/.bashrc 
+echo "export CONFIG_FILE='${DEST_DIR}/cheese_config_file.yaml'" >> ~/.bashrc 
 echo "export ASSETS_FOLDER='${HOME}/cheese-on-prem-assets/assets'" >> ~/.bashrc 
 echo "export LICENSING='True'" >> ~/.bashrc 
-echo "export IP=${ip}" >> ~/.bashrc 
+echo "export IP='${ip}'" >> ~/.bashrc 
 echo "export DB_PORT=${db_port}" >> ~/.bashrc 
 echo "export API_PORT=${api_port}" >> ~/.bashrc 
 echo "export UI_PORT=${ui_port}" >> ~/.bashrc 
