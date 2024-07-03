@@ -1,7 +1,7 @@
-#!/bin/sh
+#!/bin/bash
+
 ALL_ARGS=$@
 
-echo "ALL args :" $ALL_ARGS
 command=$1
 
 
@@ -31,6 +31,7 @@ while [ $# -gt 0 ]; do
     shift
 done
 
+
 if [ "$dest" = "" ]; then
     INFERENCE_OUTPUT_DIR="output"
 else
@@ -56,27 +57,34 @@ fi
 
 
 
-
-if [ "$command" = "start_app" ]; then
-    cheese-app
-
-elif [ "$command" = "update" ]; then
-    update-cheese
-
-elif [ "$command" = "inference" ]; then
-    if [ "$HELP" = "--help" ]; then
-        docker run -u $UID -it --entrypoint "python" -v $SOURCE_DIR:$DEST_DIR --env PORT=$DB_PORT --env CONFIG_FILE=$CONFIG_FILE --env LICENSING=$LICENSING --env CHEESE_LICENSE_FILE=$LICENSE_FILE --rm $DB_IMAGE -c 'import cheese_database.cheese_cli as cli; cli.app();' $ALL_ARGS
-    else
-        cheese-inference --input_file $input_file --dest $INFERENCE_OUTPUT_DIR --gpu_devices $GPU_DEVICES --valid_smiles $VALIDATE_SMILES --canonical_smiles $CANONICALIZE_SMILES --index_type $index_type
-    fi
-
-elif [ "$command" = "embeddings_gpu" ]; then
-    if [ "$HELP" = "--help" ]; then
-        docker run -u $UID -it --entrypoint "python" -v $SOURCE_DIR:$DEST_DIR --env PORT=$DB_PORT --env CONFIG_FILE=$CONFIG_FILE --env LICENSING=$LICENSING --env CHEESE_LICENSE_FILE=$LICENSE_FILE --rm $DB_IMAGE -c 'import cheese_database.cheese_cli as cli; cli.app();' $ALL_ARGS
-    else
-        cheese-embeddings --input_file $input_file --dest $INFERENCE_OUTPUT_DIR --search_type $SEARCH_TYPE --gpu_devices $GPU_DEVICES --save_format $save_format;
-    fi
+if [ "$command" = "update_config" ]; then
+    mkdir ~/.config
+    mkdir ~/.config/cheese
+    cat $env_config >> ~/.config/cheese/cheese-env-user.conf
 
 else
-    docker run -u $UID -it --entrypoint "python" -v $SOURCE_DIR:$DEST_DIR --env PORT=$DB_PORT --env CONFIG_FILE=$CONFIG_FILE --env LICENSING=$LICENSING --env CHEESE_LICENSE_FILE=$LICENSE_FILE --rm $DB_IMAGE -c 'import cheese_database.cheese_cli as cli; cli.app();' $ALL_ARGS
+    source /etc/cheese/cheese-env.sh
+    if [ "$command" = "start_app" ]; then
+        cheese-app
+
+    elif [ "$command" = "update" ]; then
+        update-cheese
+
+    elif [ "$command" = "inference" ]; then
+        if [ "$HELP" = "--help" ]; then
+            docker run -u $UID -it --entrypoint "python" -v /:/data --env PORT=$DB_PORT --env CONFIG_FILE=/data/$CONFIG_FILE --env LICENSING=True --env TRANSFORMERS_CACHE=/tmp --env CHEESE_LICENSE_FILE=/data/$LICENSE_FILE --rm $DB_IMAGE -c 'import cheese_database.cheese_cli as cli; cli.app();' $ALL_ARGS
+        else
+            cheese-inference --input_file $input_file --dest $INFERENCE_OUTPUT_DIR --gpu_devices $GPU_DEVICES --valid_smiles $VALIDATE_SMILES --canonical_smiles $CANONICALIZE_SMILES --index_type $index_type
+        fi
+
+    elif [ "$command" = "embeddings_gpu" ]; then
+        if [ "$HELP" = "--help" ]; then
+            docker run -u $UID -it --entrypoint "python" -v /:/data --env PORT=$DB_PORT --env CONFIG_FILE=/data/$CONFIG_FILE --env LICENSING=True --env CHEESE_LICENSE_FILE=/data/$LICENSE_FILE --env TRANSFORMERS_CACHE=/tmp --rm $DB_IMAGE -c 'import cheese_database.cheese_cli as cli; cli.app();' $ALL_ARGS
+        else
+            cheese-embeddings --input_file $input_file --dest $INFERENCE_OUTPUT_DIR --search_type $SEARCH_TYPE --gpu_devices $GPU_DEVICES --save_format $save_format;
+        fi
+
+    else
+        docker run -u $UID -it --entrypoint "python" -v /:/data --env PORT=$DB_PORT --env CONFIG_FILE=/data/$CONFIG_FILE --env LICENSING=True --env CHEESE_LICENSE_FILE=/data/$LICENSE_FILE --env TRANSFORMERS_CACHE=/tmp --rm $DB_IMAGE -c 'import cheese_database.cheese_cli as cli; cli.app();' $ALL_ARGS
+    fi
 fi

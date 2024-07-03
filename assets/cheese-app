@@ -1,21 +1,26 @@
-#!/bin/sh
+#!/bin/bash
+
+source /etc/cheese/cheese-env.sh
+
 DB_URL="http://"$IP":$DB_PORT"
 API_URL="http://"$IP":$API_PORT"
 UI_URL="http://"$IP":$UI_PORT"
-
+echo $API_URL
 echo "Removing existing containers"
 docker rm -f api ui db cheese_docs
 
 echo "Running cheese database server..."
-docker run -u $UID -d -v $SOURCE_DIR:$DEST_DIR --env PORT=$DB_PORT --env CONFIG_FILE=$CONFIG_FILE --env LICENSING=$LICENSING --env CHEESE_LICENSE_FILE=$LICENSE_FILE --name db -p $DB_PORT:$DB_PORT --rm $DB_IMAGE
+docker run -u $UID -d -v /:/data --env PORT=$DB_PORT --env CONFIG_FILE=/data/$CONFIG_FILE --env LICENSING=True --env CHEESE_LICENSE_FILE=/data/$LICENSE_FILE --name db -p $DB_PORT:$DB_PORT --rm $DB_IMAGE
 
-python3 $ASSETS_FOLDER"/check_database_server.py" --ip $IP --db_port $DB_PORT
+python3 "/etc/cheese/check_database_server.py" --ip $IP --db_port $DB_PORT
+
+source /etc/cheese/cheese-env.sh
 
 echo "Running cheese UI .."
 docker run -u $UID -d --env CHEESE_API=$API_URL --name ui -p $UI_PORT:3000 --rm $UI_IMAGE
 
 echo "Running cheese API..."
-docker run -u $UID -d -v $SOURCE_DIR:$DEST_DIR -it --env API_URL=$DB_URL --env UI_URL=$UI_URL --env PORT=$API_PORT --env CONFIG_FILE=$CONFIG_FILE --env LICENSING=$LICENSING --env CHEESE_LICENSE_FILE=$LICENSE_FILE --name api -p $API_PORT:$API_PORT --rm $API_IMAGE
+docker run -u $UID -d -v /:/data -it --env API_URL=$DB_URL --env UI_URL=$UI_URL --env PORT=$API_PORT --env CONFIG_FILE=/data/$CONFIG_FILE --env LICENSING=True --env CHEESE_LICENSE_FILE=/data/$LICENSE_FILE --name api -p $API_PORT:$API_PORT --rm $API_IMAGE
 
 
 echo "Running cheese DOCS..."
@@ -23,6 +28,7 @@ docker run -u $UID -d --name cheese_docs -p 9010:9010 --rm $DOCS_IMAGE
 
 API_FOR_DOCS="!!swagger-http http://"$IP":"$API_PORT"/openapi.json!!"
 
-rm -f index.md
-echo $API_FOR_DOCS > index.md
-docker cp index.md cheese_docs:/opt/themama.ai/docs
+rm -f $HOME/index.md
+echo $API_FOR_DOCS > $HOME/index.md
+docker cp $HOME/index.md cheese_docs:/opt/themama.ai/docs
+rm -f $HOME/index.md

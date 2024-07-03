@@ -1,0 +1,9 @@
+CHEESE_CUSTOMER=Abbvie
+CHEESE_PASSWORD=XXX
+LICENSE_FILE=/data/on-prem/cheese_license_file.json
+CONFIG_FILE=/data/on-prem/cheese_config_file.yaml
+ASSETS_FOLDER=/home/hamzagamouh/cheese-on-prem-assets/assets
+IP=cheese-dev.ch.themama.ai
+DB_PORT=9001
+API_PORT=9002
+UI_PORT=9003

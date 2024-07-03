@@ -1,9 +1,21 @@
-#!/bin/sh
+#!/bin/bash
 # Login to Azure CR
+
+while [ $# -gt 0 ]; do
+    if [[ $1 == --* ]]; then
+        v=${1/--/}
+        declare $v=$2
+        shift
+    fi
+    shift
+done
+
 echo "Pulling from repo"
 cd $ASSETS_FOLDER
 cd ..
 git pull
+
+source /etc/cheese/cheese-env.sh
 
 sudo cp $ASSETS_FOLDER/cheese /usr/local/bin
 sudo chmod +x /usr/local/bin/cheese
@@ -22,9 +34,9 @@ sudo docker login -u cheese-customer-test -p $CHEESE_PASSWORD $REPO_NAME
 
 # # Pull the CHEESE app images
 sudo docker system prune -f
-sudo docker pull $UI_IMAGE
-sudo docker pull $DB_IMAGE
-sudo docker pull $API_IMAGE
-sudo docker pull $DOCS_IMAGE
-sudo docker pull $INFERENCE_IMAGE
+# sudo docker pull $UI_IMAGE
+# sudo docker pull $DB_IMAGE
+# sudo docker pull $API_IMAGE
+# sudo docker pull $DOCS_IMAGE
+# sudo docker pull $INFERENCE_IMAGE
 

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 while [ $# -gt 0 ]; do
     if [[ $1 == "--"* ]]; then
         v="${1/--/}"
@@ -15,10 +15,10 @@ DELIMITER=","
 DEVICE="cuda"
 BATCH_SIZE=1024
 
-MAXSIZE=2000000
+MAXSIZE=1000000
 
-INPUT_FILE=$SOURCE_DIR"/"$input_file
-DEST_INPUT_FILE=$DEST_DIR"/"$input_file
+INPUT_FILE=$input_file
+DEST_INPUT_FILE="/data/"$input_file
 
 # Get file size
 echo Getting file size of $INPUT_FILE
@@ -44,8 +44,8 @@ fi
 CHUNK_SIZE=100000  # Chunk size for embeddings computation
 
 echo "Running CHEESE inference..."
-OUTPUT_DIRECTORY="${DEST_DIR}/${dest}"
-NEW_OUTPUT_DIRECTORY="${SOURCE_DIR}/${dest}"
+OUTPUT_DIRECTORY="/data/${dest}"
+NEW_OUTPUT_DIRECTORY="${dest}"
 echo Saving outputs to $NEW_OUTPUT_DIRECTORY
 mkdir $NEW_OUTPUT_DIRECTORY
-docker run -u $UID -v $SOURCE_DIR:$DEST_DIR -it --env NCCL_SHM_DISABLE=1 --env CHEESE_LICENSE_FILE=$LICENSE_FILE --env LICENSING=$LICENSING --gpus all --rm $INFERENCE_IMAGE --index_type $INDEX_TYPE --input_file $DEST_INPUT_FILE --extension $EXTENSION --delimiter $DELIMITER --output_directory $OUTPUT_DIRECTORY --gpu_device_ids $gpu_devices --batch_size $BATCH_SIZE --chunk_size $CHUNK_SIZE --validate_smiles $valid_smiles --canonicalize_smiles $canonical_smiles
+docker run -u $UID -v /:/data -it --env NCCL_SHM_DISABLE=1 --env CHEESE_LICENSE_FILE=/data/$LICENSE_FILE --env LICENSING=True --gpus all --rm $INFERENCE_IMAGE --index_type $INDEX_TYPE --input_file $DEST_INPUT_FILE --extension $EXTENSION --delimiter $DELIMITER --output_directory $OUTPUT_DIRECTORY --gpu_device_ids $gpu_devices --batch_size $BATCH_SIZE --chunk_size $CHUNK_SIZE --validate_smiles $valid_smiles --canonicalize_smiles $canonical_smiles

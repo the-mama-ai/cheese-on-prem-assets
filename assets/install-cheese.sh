@@ -1,57 +1,51 @@
-#!/bin/sh
+#!/bin/bash
+
+env_file=$1
 
 while [ $# -gt 0 ]; do
-    if [[ $1 == "--"* ]]; then
-        v="${1/--/}"
-        declare "$v"="$2"
+    if [[ $1 == --* ]]; then
+        v=${1/--/}
+        declare $v=$2
         shift
     fi
     shift
 done
 
+
 echo Installing CHEESE...
-# Modify as needed !
-db_port=9001
-api_port=9002
-ui_port=9003
 
-# Define global environment variables
+# Define Env variables
 
-echo "export SOURCE_DIR=${source_dir}" >> ~/.bashrc 
-echo "export DEST_DIR=/data" >> ~/.bashrc 
-echo "export CHEESE_CUSTOMER=${customer}" >> ~/.bashrc 
-echo "export CHEESE_PASSWORD=${password}" >> ~/.bashrc 
-echo "export REPO_NAME='themamaai.azurecr.io/cheese'" >> ~/.bashrc 
-echo "export LICENSE_FILE='${DEST_DIR}/cheese_license_file.json'" >> ~/.bashrc 
-echo "export CONFIG_FILE='${DEST_DIR}/cheese_config_file.yaml'" >> ~/.bashrc 
-echo "export ASSETS_FOLDER='${HOME}/cheese-on-prem-assets/assets'" >> ~/.bashrc 
-echo "export LICENSING='True'" >> ~/.bashrc 
-echo "export IP='${ip}'" >> ~/.bashrc 
-echo "export DB_PORT=${db_port}" >> ~/.bashrc 
-echo "export API_PORT=${api_port}" >> ~/.bashrc 
-echo "export UI_PORT=${ui_port}" >> ~/.bashrc 
+echo "Setting Env vars..."
+source cheese-env.sh --template True
 
-REPO_NAME='themamaai.azurecr.io/cheese'
-FULL_IMAGE_NAME=$REPO_NAME"/cheese_inference:"$customer
-echo "export INFERENCE_IMAGE=${FULL_IMAGE_NAME}" >> ~/.bashrc 
-
-FULL_IMAGE_NAME=$REPO_NAME"/cheese-database:"$customer
-echo "export DB_IMAGE=${FULL_IMAGE_NAME}" >> ~/.bashrc 
-
-FULL_IMAGE_NAME=$REPO_NAME"/cheese-api:"$customer
-echo "export API_IMAGE=${FULL_IMAGE_NAME}" >> ~/.bashrc 
-
-FULL_IMAGE_NAME=$REPO_NAME"/cheese-ui:"$customer
-echo "export UI_IMAGE=${FULL_IMAGE_NAME}" >> ~/.bashrc 
-
-FULL_IMAGE_NAME=$REPO_NAME"/cheese-docs:"$customer
-echo "export DOCS_IMAGE=${FULL_IMAGE_NAME}" >> ~/.bashrc 
-
-source ~/.bashrc
-
-sudo cp $ASSETS_FOLDER/update-cheese /usr/local/bin
+echo "Setting update scripts..."
+sudo cp update-cheese /usr/local/bin
 sudo chmod +x /usr/local/bin/update-cheese
 
+
+echo "Setting environment scripts scripts..."
+sudo mkdir /etc/cheese
+sudo cp $ASSETS_FOLDER/cheese-env.sh /etc/cheese
+sudo cp $ASSETS_FOLDER/check_database_server.py /etc/cheese
+
+
+echo "Setting Environment configuration files..."
+
+if [ ! "$env_file" = "" ]; then
+    echo Setting from file $env_file
+    sudo cat $env_file > /etc/cheese/cheese-env.conf;
+
+else
+    echo Please define an environment file
+
+fi
+
+echo "Setting permissions"
+
+sudo chmod -R 777 /etc/cheese
+sudo chmod 774 /etc/cheese/cheese-env.sh
+sudo chmod 774 /etc/cheese/check_database_server.py
+sudo chmod 774 /etc/cheese/cheese-env.conf
+
 update-cheese
-
-

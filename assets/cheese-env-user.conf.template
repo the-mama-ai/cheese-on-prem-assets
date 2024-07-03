@@ -1,0 +1,5 @@
+LICENSE_FILE=/data/on-prem/cheese_license_file.json
+CONFIG_FILE=/data/on-prem/cheese_config_file.yaml
+DB_PORT=9001
+API_PORT=9002
+UI_PORT=9003
