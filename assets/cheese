@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 ALL_ARGS=$@
 
 echo "ALL args :" $ALL_ARGS
