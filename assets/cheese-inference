@@ -44,7 +44,8 @@ fi
 CHUNK_SIZE=100000  # Chunk size for embeddings computation
 
 echo "Running CHEESE inference..."
-OUTPUT_DIRECTORY=$DEST_DIR"/"$dest
-echo Saving outputs to $SOURCE_DIR"/"$dest
-mkdir $SOURCE_DIR"/"$dest
+OUTPUT_DIRECTORY="${DEST_DIR}/${dest}"
+NEW_OUTPUT_DIRECTORY="${SOURCE_DIR}/${dest}"
+echo Saving outputs to $NEW_OUTPUT_DIRECTORY
+mkdir $NEW_OUTPUT_DIRECTORY
 docker run -u $UID -v $SOURCE_DIR:$DEST_DIR -it --env NCCL_SHM_DISABLE=1 --env CHEESE_LICENSE_FILE=$LICENSE_FILE --env LICENSING=$LICENSING --gpus all --rm $INFERENCE_IMAGE --index_type $INDEX_TYPE --input_file $DEST_INPUT_FILE --extension $EXTENSION --delimiter $DELIMITER --output_directory $OUTPUT_DIRECTORY --gpu_device_ids $gpu_devices --batch_size $BATCH_SIZE --chunk_size $CHUNK_SIZE --validate_smiles $valid_smiles --canonicalize_smiles $canonical_smiles
