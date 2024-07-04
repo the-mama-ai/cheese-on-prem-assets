@@ -6,6 +6,8 @@ TRANSFORMERS:
 
 DIM: "256"
 
+VISUALISATION_MODELS_PATH: "/data/on-prem/visualisation_models/models"
+
 OUTPUT_DIRECTORIES: 
   ENAMINE-REAL: "/data/enamine_real" 
   ZINC15: "/data/zinc15"
