@@ -54,9 +54,9 @@ if groups | grep -q sudo; then
     :;
     
 else
-    if [ -f "~/.config/cheese/cheese-env-user.conf" ]; then
+    if [ -f "$HOME/.config/cheese/cheese-env-user.conf" ]; then
         echo "Non sudo !!"
-        export_env_vars ~/.config/cheese/cheese-env-user.conf;
+        export_env_vars $HOME/.config/cheese/cheese-env-user.conf;
 
     fi
 
