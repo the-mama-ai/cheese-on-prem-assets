@@ -50,7 +50,7 @@ done
 
 export_env_vars /etc/cheese/cheese-env.conf;
 
-if groups | grep -q sudo; then
+if groups | grep " sudo "; then
     :;
     
 else
