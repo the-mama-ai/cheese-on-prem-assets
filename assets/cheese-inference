@@ -48,4 +48,4 @@ OUTPUT_DIRECTORY="/data/${dest}"
 NEW_OUTPUT_DIRECTORY="${dest}"
 echo Saving outputs to $NEW_OUTPUT_DIRECTORY
 mkdir $NEW_OUTPUT_DIRECTORY
-docker run -u $UID -v /:/data -it --env NCCL_SHM_DISABLE=1 --env CHEESE_LICENSE_FILE=/data/$LICENSE_FILE --env LICENSING=True --gpus all --rm $INFERENCE_IMAGE --index_type $INDEX_TYPE --input_file $DEST_INPUT_FILE --extension $EXTENSION --delimiter $DELIMITER --output_directory $OUTPUT_DIRECTORY --gpu_device_ids $gpu_devices --batch_size $BATCH_SIZE --chunk_size $CHUNK_SIZE --validate_smiles $valid_smiles --canonicalize_smiles $canonical_smiles
+docker run -u $UID -v /:/data -it --env CUPY_CACHE_DIR=/tmp --env NCCL_SHM_DISABLE=1 --env CHEESE_LICENSE_FILE=/data/$LICENSE_FILE --env LICENSING=True --gpus all --rm $INFERENCE_IMAGE --index_type $INDEX_TYPE --input_file $DEST_INPUT_FILE --extension $EXTENSION --delimiter $DELIMITER --output_directory $OUTPUT_DIRECTORY --gpu_device_ids $gpu_devices --batch_size $BATCH_SIZE --chunk_size $CHUNK_SIZE --validate_smiles $valid_smiles --canonicalize_smiles $canonical_smiles
