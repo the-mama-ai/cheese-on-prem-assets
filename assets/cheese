@@ -50,7 +50,6 @@ fi
 # Specify Search type for cheese-embeddings
 if [ "$search_types" = "" ]; then
     SEARCH_TYPES="all"
-
 else
     SEARCH_TYPES=$search_types
 fi
