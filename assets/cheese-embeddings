@@ -16,8 +16,9 @@ DEVICE="cuda"
 BATCH_SIZE=1024
 
 
-INPUT_FILE=$SOURCE_DIR"/"$input_file
-DEST_INPUT_FILE=$DEST_DIR"/"$input_file
+INPUT_FILE=$input_file
+DEST_INPUT_FILE="/data/"$input_file
+
 
 INDEX_TYPE="in_memory"
 
