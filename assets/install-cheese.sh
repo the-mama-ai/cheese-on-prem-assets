@@ -27,7 +27,7 @@ if [ ! "$env_file" = "" ]; then
     sudo cat $env_file > /etc/cheese/cheese-env.conf;
 
 else
-    echo "It is recommended that you supply an environment configuration file. Setting environment from template"
+    echo "Please specify an environment configuration file. Setting environment from template"
     sudo cat cheese-env.conf.template > /etc/cheese/cheese-env.conf;
     
 
