@@ -48,21 +48,14 @@ done
 
 
 
-if [ "$template" = "True" ]; then
-    echo Using template;
-    export_env_vars cheese-env.conf.template;
+export_env_vars /etc/cheese/cheese-env.conf;
 
+if groups | grep -q sudo; then
+    :;
+    
 else
-    export_env_vars /etc/cheese/cheese-env.conf;
-
-    if groups | grep -q sudo; then
-        :;
-        
-    else
-        if [ -f "~/.config/cheese-env-user.conf" ]; then
-            export_env_vars ~/.config/cheese-env-user.conf;
-        fi
-
+    if [ -f "~/.config/cheese-env-user.conf" ]; then
+        export_env_vars ~/.config/cheese-env-user.conf;
     fi
 
 fi
