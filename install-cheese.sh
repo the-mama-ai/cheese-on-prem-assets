@@ -36,7 +36,7 @@ sudo chmod +x /usr/local/bin/update-cheese
 
 echo "Setting cheese scripts..."
 sudo mkdir /etc/cheese
-sudo cp cheese-env.sh /etc/cheese
+sudo cp install/cheese-env.sh /etc/cheese
 sudo cp assets/check_database_server.py /etc/cheese
 
 echo "Setting permissions"
