@@ -28,4 +28,4 @@ You can install CHEESE on your instance using the following steps :
 
 3. Run `source install-cheese.sh --env_config <env_config_file>`. Where `<env_config_file>` is the path to your environment configuration file.
 
-4. Tests if the installation is working by running the command `cheese`
+4. Test if the installation is working by running the command `cheese`
