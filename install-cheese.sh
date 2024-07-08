@@ -16,34 +16,28 @@ echo Installing CHEESE...
 
 # Define Env variables
 
-echo "Setting Env vars..."
-source cheese-env.sh --template True
-
-
 echo "Setting Environment configuration files..."
 
-if [ ! "$env_file" = "" ]; then
-    echo Setting from file $env_file
-    sudo cat $env_file > /etc/cheese/cheese-env.conf;
+if [ ! "$env_config" = "" ]; then
+    echo Setting from file $env_config
+    sudo cat $env_config > /etc/cheese/cheese-env.conf;
 
 else
-    echo "Please specify an environment configuration file. Setting environment from template"
-    sudo cat cheese-env.conf.template > /etc/cheese/cheese-env.conf;
-    
+    exit "Please specify an environment configuration file. Please modify the template in config/cheese-env.conf.template"    
 
 fi
 
 source cheese-env.sh
 
 echo "Setting update scripts..."
-sudo cp update-cheese /usr/local/bin
+sudo cp scripts/update-cheese /usr/local/bin
 sudo chmod +x /usr/local/bin/update-cheese
 
 
 echo "Setting cheese scripts..."
 sudo mkdir /etc/cheese
-sudo cp cheese-env.sh /etc/cheese
-sudo cp check_database_server.py /etc/cheese
+sudo cp install/cheese-env.sh /etc/cheese
+sudo cp assets/check_database_server.py /etc/cheese
 
 echo "Setting permissions"
 
@@ -52,4 +46,4 @@ sudo chmod 774 /etc/cheese/cheese-env.sh
 sudo chmod 774 /etc/cheese/check_database_server.py
 sudo chmod 774 /etc/cheese/cheese-env.conf
 
-update-cheese
+update-cheese --install True
