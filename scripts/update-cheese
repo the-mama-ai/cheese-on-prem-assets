@@ -10,23 +10,27 @@ while [ $# -gt 0 ]; do
     shift
 done
 
+if [ ! $install = "True" ]; then
+# Pull from repo only in usage mode
 echo "Pulling from repo"
 cd $ASSETS_FOLDER
-cd ..
 git pull
+
+fi
+
 
 source /etc/cheese/cheese-env.sh
 
-sudo cp $ASSETS_FOLDER/cheese /usr/local/bin
+sudo cp $ASSETS_FOLDER/scripts/cheese /usr/local/bin
 sudo chmod +x /usr/local/bin/cheese
 
-sudo cp $ASSETS_FOLDER/cheese-inference /usr/local/bin
+sudo cp $ASSETS_FOLDER/scripts/cheese-inference /usr/local/bin
 sudo chmod +x /usr/local/bin/cheese-inference
 
-sudo cp $ASSETS_FOLDER/cheese-embeddings /usr/local/bin
+sudo cp $ASSETS_FOLDER/scripts/cheese-embeddings /usr/local/bin
 sudo chmod +x /usr/local/bin/cheese-embeddings
 
-sudo cp $ASSETS_FOLDER/cheese-app /usr/local/bin
+sudo cp $ASSETS_FOLDER/scripts/cheese-app /usr/local/bin
 sudo chmod +x /usr/local/bin/cheese-app
 
 echo updating CHEESE...
