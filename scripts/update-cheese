@@ -34,6 +34,7 @@ sudo cp $ASSETS_FOLDER/scripts/cheese-app /usr/local/bin
 sudo chmod +x /usr/local/bin/cheese-app
 
 echo updating CHEESE...
+REPO_NAME="themamaai.azurecr.io/cheese"
 sudo docker login -u cheese-customer-test -p $CHEESE_PASSWORD $REPO_NAME
 
 # # Pull the CHEESE app images
