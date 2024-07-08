@@ -24,7 +24,7 @@ docker run -u $UID -d -v /:/data -it --env API_URL=$DB_URL --env UI_URL=$UI_URL 
 
 
 echo "Running cheese DOCS..."
-docker run -u $UID -d --name cheese_docs -p 9010:9010 --rm $DOCS_IMAGE
+docker run -u $UID -d --name cheese_docs -p $DOCS_PORT:9010 --rm $DOCS_IMAGE
 
 API_FOR_DOCS="!!swagger-http http://"$IP":"$API_PORT"/openapi.json!!"
 
@@ -32,3 +32,7 @@ rm -f $HOME/index.md
 echo $API_FOR_DOCS > $HOME/index.md
 docker cp $HOME/index.md cheese_docs:/opt/themama.ai/docs
 rm -f $HOME/index.md
+
+echo To access CHEESE API : http://"$IP":"$API_PORT"/docs
+echo To access CHEESE UI : http://"$IP":"$UI_PORT"
+echo To access CHEESE API Docs : http://"$IP":"$DOCS_PORT"
