@@ -15,7 +15,7 @@ You can install CHEESE on your instance using the following steps :
 
 1. Clone this repository on your instance
 
-2. Copy the template environment configuration file in `config/cheese-env.conf.template` and modify it accordingly 
+2. Copy the template environment configuration file in `config/cheese-env.conf.template` which defines global environment variables, and modify it accordingly.
 
     - `CHEESE_CUSTOMER` : The customer name
     - `CHEESE_PASSWORD` : The password used to pull Docker images for running CHEESE
@@ -26,6 +26,6 @@ You can install CHEESE on your instance using the following steps :
     - `API_PORT` : The port on which to expose the CHEESE API
     - `UI_PORT` : The port on which to expose the CHEESE UI
 
-3. Run `source install-cheese.sh --env_config <env_config_file>`
+3. Run `source install-cheese.sh --env_config <env_config_file>`. Where `<env_config_file>` is the path to your environment configuration file.
 
 4. Tests if the installation is working by running the command `cheese`
