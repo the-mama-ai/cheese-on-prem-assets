@@ -54,6 +54,27 @@ else
     SEARCH_TYPES=$search_types
 fi
 
+# Specify chunk size for inference
+if [ "$chunk_size" = "" ]; then
+    CHUNK_SIZE=100000
+else
+    CHUNK_SIZE=$chunk_size
+fi
+
+# Specify embeddings computation batch size for inference
+if [ "$batch_size" = "" ]; then
+    BATCH_SIZE=1024
+else
+    BATCH_SIZE=$batch_size
+fi
+
+# Specify clustering batch size for inference
+if [ "$clustering_batch_size" = "" ]; then
+    CLUSTERING_BS=10000
+else
+    CLUSTERING_BS=$clustering_batch_size
+fi
+
 
 
 if [ "$command" = "update_config" ]; then
@@ -73,7 +94,7 @@ else
         if [ "$HELP" = "--help" ]; then
             docker run -u $UID -it --entrypoint "python" -v /:/data --env PORT=$DB_PORT --env CONFIG_FILE=/data/$CONFIG_FILE --env LICENSING=True --env TRANSFORMERS_CACHE=/tmp --env CHEESE_LICENSE_FILE=/data/$LICENSE_FILE --rm $DB_IMAGE -c 'import cheese_database.cheese_cli as cli; cli.app();' $ALL_ARGS
         else
-            cheese-inference --input_file $input_file --dest $INFERENCE_OUTPUT_DIR --gpu_devices $GPU_DEVICES --valid_smiles $VALIDATE_SMILES --canonical_smiles $CANONICALIZE_SMILES --index_type $index_type
+            cheese-inference --input_file $input_file --dest $INFERENCE_OUTPUT_DIR --gpu_devices $GPU_DEVICES --valid_smiles $VALIDATE_SMILES --canonical_smiles $CANONICALIZE_SMILES --clustering_bs $CLUSTERING_BS --chunk_size $CHUNK_SIZE --batch_size $BATCH_SIZE --index_type $index_type
         fi
 
     elif [ "$command" = "embeddings_gpu" ]; then
