@@ -1,38 +1,52 @@
 #!/bin/bash
 
+command=$1
+
+if [ "$command" = "test" ]; then
+    cheese_user=root
+else
+    cheese_user=$UID
+
+fi
+
 source /etc/cheese/cheese-env.sh
 
 DB_URL="http://"$IP":$DB_PORT"
 API_URL="http://"$IP":$API_PORT"
 UI_URL="http://"$IP":$UI_PORT"
 echo $API_URL
+
+API_CONTAINER="${USER}_api"
+UI_CONTAINER="${USER}_ui"
+DB_CONTAINER="${USER}_db"
 echo "Removing existing containers"
-docker rm -f api ui db cheese_docs
+docker rm -f $API_CONTAINER $UI_CONTAINER $DB_CONTAINER cheese_docs
 
 echo "Running cheese database server..."
-docker run -u $UID -d -v /:/data --env PORT=$DB_PORT --env CONFIG_FILE=/data/$CONFIG_FILE --env LICENSING=True --env CHEESE_LICENSE_FILE=/data/$LICENSE_FILE --name db -p $DB_PORT:$DB_PORT --rm $DB_IMAGE
+docker run -u $cheese_user -d -v /:/data --env PORT=$DB_PORT --env CONFIG_FILE=/data/$CONFIG_FILE --env LICENSING=True --env CHEESE_LICENSE_FILE=/data/$LICENSE_FILE --name $DB_CONTAINER -p $DB_PORT:$DB_PORT --rm $DB_IMAGE
 
-python3 "/etc/cheese/check_database_server.py" --ip $IP --db_port $DB_PORT
-
-source /etc/cheese/cheese-env.sh
+python3 "/etc/cheese/check_database_server.py" --ip $IP --db_port $DB_PORT --user $USER
 
 echo "Running cheese UI .."
-docker run -u $UID -d --env CHEESE_API=$API_URL --name ui -p $UI_PORT:3000 --rm $UI_IMAGE
+docker run -u $cheese_user -d --env CHEESE_API=$API_URL --name $UI_CONTAINER -p $UI_PORT:3000 --rm $UI_IMAGE
 
-echo "Running cheese API..."
-docker run -u $UID -d -v /:/data -it --env API_URL=$DB_URL --env UI_URL=$UI_URL --env PORT=$API_PORT --env CONFIG_FILE=/data/$CONFIG_FILE --env LICENSING=True --env CHEESE_LICENSE_FILE=/data/$LICENSE_FILE --name api -p $API_PORT:$API_PORT --rm $API_IMAGE
+if [ ! "$command" = "test" ]; then
+    echo "Running cheese API..."
+    docker run -u $cheese_user -d -v /:/data -it --env API_URL=$DB_URL --env UI_URL=$UI_URL --env PORT=$API_PORT --env CONFIG_FILE=/data/$CONFIG_FILE --env LICENSING=True --env CHEESE_LICENSE_FILE=/data/$LICENSE_FILE --name $API_CONTAINER -p $API_PORT:$API_PORT --rm $API_IMAGE
 
 
-echo "Running cheese DOCS..."
-docker run -u $UID -d --name cheese_docs -p $DOCS_PORT:9010 --rm $DOCS_IMAGE
+    echo "Running cheese DOCS..."
+    docker run -u $cheese_user -d --name cheese_docs -p $DOCS_PORT:9010 --rm $DOCS_IMAGE
 
-API_FOR_DOCS="!!swagger-http http://"$IP":"$API_PORT"/openapi.json!!"
+    API_FOR_DOCS="!!swagger-http http://"$IP":"$API_PORT"/openapi.json!!"
 
-rm -f $HOME/index.md
-echo $API_FOR_DOCS > $HOME/index.md
-docker cp $HOME/index.md cheese_docs:/opt/themama.ai/docs
-rm -f $HOME/index.md
+    rm -f $HOME/index.md
+    echo $API_FOR_DOCS > $HOME/index.md
+    docker cp $HOME/index.md cheese_docs:/opt/themama.ai/docs
+    rm -f $HOME/index.md
 
-echo To access CHEESE API : http://"$IP":"$API_PORT"/docs
-echo To access CHEESE UI : http://"$IP":"$UI_PORT"
-echo To access CHEESE API Docs : http://"$IP":"$DOCS_PORT"
+    echo To access CHEESE API : http://"$IP":"$API_PORT"/docs
+    echo To access CHEESE UI : http://"$IP":"$UI_PORT"
+    echo To access CHEESE API Docs : http://"$IP":"$DOCS_PORT"
+
+fi
