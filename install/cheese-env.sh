@@ -1,4 +1,5 @@
 #!/bin/bash
+config_file=$1
 
 
 # Define a function to export environment variables from a file
@@ -36,19 +37,16 @@ export_env_vars() {
 }
 
 
-while [ $# -gt 0 ]; do
-    if [[ $1 == --* ]]; then
-        v=${1/--/}
-        declare $v=$2
-        shift
-    fi
-    shift
-done
+if [ $config_file = "" ]; then
 
+export_env_vars /etc/cheese/cheese-env.conf
 
+else
 
+export_env_vars $config_file
 
-export_env_vars /etc/cheese/cheese-env.conf;
+fi
+
 
 if groups | grep -q " sudo "; then
     :;

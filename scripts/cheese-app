@@ -9,8 +9,6 @@ else
 
 fi
 
-source /etc/cheese/cheese-env.sh
-
 DB_URL="http://"$IP":$DB_PORT"
 API_URL="http://"$IP":$API_PORT"
 UI_URL="http://"$IP":$UI_PORT"
@@ -23,6 +21,8 @@ echo "Removing existing containers"
 docker rm -f $API_CONTAINER $UI_CONTAINER $DB_CONTAINER cheese_docs
 
 echo "Running cheese database server..."
+
+
 docker run -u $cheese_user -d -v /:/data --env PORT=$DB_PORT --env CONFIG_FILE=/data/$CONFIG_FILE --env LICENSING=True --env CHEESE_LICENSE_FILE=/data/$LICENSE_FILE --name $DB_CONTAINER -p $DB_PORT:$DB_PORT --rm $DB_IMAGE
 
 python3 "/etc/cheese/check_database_server.py" --ip $IP --db_port $DB_PORT --user $USER
@@ -32,7 +32,7 @@ docker run -u $cheese_user -d --env CHEESE_API=$API_URL --name $UI_CONTAINER -p 
 
 if [ ! "$command" = "test" ]; then
     echo "Running cheese API..."
-    docker run -u $cheese_user -d -v /:/data -it --env API_URL=$DB_URL --env UI_URL=$UI_URL --env PORT=$API_PORT --env CONFIG_FILE=/data/$CONFIG_FILE --env LICENSING=True --env CHEESE_LICENSE_FILE=/data/$LICENSE_FILE --name $API_CONTAINER -p $API_PORT:$API_PORT --rm $API_IMAGE
+    docker run -u $cheese_user -d -v /:/data  --env API_URL=$DB_URL --env UI_URL=$UI_URL --env PORT=$API_PORT --env CONFIG_FILE=/data/$CONFIG_FILE --env LICENSING=True --env CHEESE_LICENSE_FILE=/data/$LICENSE_FILE --name $API_CONTAINER -p $API_PORT:$API_PORT --rm $API_IMAGE
 
 
     echo "Running cheese DOCS..."
@@ -47,6 +47,6 @@ if [ ! "$command" = "test" ]; then
 
     echo To access CHEESE API : http://"$IP":"$API_PORT"/docs
     echo To access CHEESE UI : http://"$IP":"$UI_PORT"
-    echo To access CHEESE API Docs : http://"$IP":"$DOCS_PORT"
+    # echo To access CHEESE API Docs : http://"$IP":"$DOCS_PORT"
 
 fi
