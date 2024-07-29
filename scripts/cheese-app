@@ -22,7 +22,6 @@ docker rm -f $API_CONTAINER $UI_CONTAINER $DB_CONTAINER cheese_docs
 
 echo "Running cheese database server..."
 
-
 docker run -u $cheese_user -d -v /:/data --env PORT=$DB_PORT --env CONFIG_FILE=/data/$CONFIG_FILE --env LICENSING=True --env CHEESE_LICENSE_FILE=/data/$LICENSE_FILE --name $DB_CONTAINER -p $DB_PORT:$DB_PORT --rm $DB_IMAGE
 
 python3 "/etc/cheese/check_database_server.py" --ip $IP --db_port $DB_PORT --user $USER

@@ -37,7 +37,7 @@ export_env_vars() {
 }
 
 
-if [ $config_file = "" ]; then
+if [ "$config_file" = "" ]; then
 
 export_env_vars /etc/cheese/cheese-env.conf
 
