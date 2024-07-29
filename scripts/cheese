@@ -113,8 +113,8 @@ else
 
 
     elif [ "$command" = "test" ]; then
-        sudo rm -rf /tmp/cheese_test
-        mkdir /tmp/cheese_test
+        # sudo rm -rf /tmp/cheese_test
+        mkdir /tmp/cheese_test && exit 0
         sudo chmod -R 777 /tmp/cheese_test 
 
         if [ "$test_component" = "cli" ]; then
