@@ -25,7 +25,7 @@ export_env_vars() {
     export DB_IMAGE=${FULL_IMAGE_NAME}
 
     FULL_IMAGE_NAME=themamaai.azurecr.io/cheese/cheese-api:$CHEESE_CUSTOMER
-    API_IMAGE=${FULL_IMAGE_NAME};
+    export API_IMAGE=${FULL_IMAGE_NAME};
 
     FULL_IMAGE_NAME=themamaai.azurecr.io/cheese/cheese-ui:$CHEESE_CUSTOMER
     export UI_IMAGE=${FULL_IMAGE_NAME};
