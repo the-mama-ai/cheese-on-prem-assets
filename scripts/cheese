@@ -14,7 +14,6 @@ CANONICALIZE_SMILES="false"
 
 for x in $ALL_ARGS
 do 
-HELP=$x;
 
 if [ "$x" = "--validate_smiles" ]; then
     VALIDATE_SMILES="true" ; 
@@ -24,15 +23,20 @@ if [ "$x" = "--canonicalize_smiles" ]; then
     CANONICALIZE_SMILES="true" ; 
 fi
 
+if [ "$x" = "--help" ]; then
+    HELP="true" ; 
+fi
+
+
 done
 
 while [ $# -gt 0 ]; do
     if [[ $1 == "--"* ]]; then
         v="${1/--/}"
         declare "$v"="$2"
-        shift
+        shift || true
     fi
-    shift
+    shift || true
 done
 
 
@@ -79,6 +83,15 @@ else
     CLUSTERING_BS=$clustering_batch_size
 fi
 
+# Whether to skip headers for inference
+if [ "$skip_headers" = "" ]; then
+    SKIP_HEADERS="true"
+
+else
+    SKIP_HEADERS=$skip_headers
+fi
+
+
 
 
 if [ "$command" = "update_config" ]; then
@@ -97,14 +110,14 @@ else
         update-cheese
 
     elif [ "$command" = "inference" ]; then
-        if [ "$HELP" = "--help" ]; then
+        if [ "$HELP" = "true" ]; then
             docker run -u $UID  --entrypoint "python" -v /:/data --env PORT=$DB_PORT --env CONFIG_FILE=/data/$CONFIG_FILE --env LICENSING=True --env TRANSFORMERS_CACHE=/tmp --env CHEESE_LICENSE_FILE=/data/$LICENSE_FILE --rm $DB_IMAGE -c 'import cheese_database.cheese_cli as cli; cli.app();' $ALL_ARGS
         else
-            cheese-inference --input_file $input_file --dest $INFERENCE_OUTPUT_DIR --gpu_devices $GPU_DEVICES --valid_smiles $VALIDATE_SMILES --canonical_smiles $CANONICALIZE_SMILES --clustering_bs $CLUSTERING_BS --chunk_size $CHUNK_SIZE --batch_size $BATCH_SIZE --index_type $index_type
+            cheese-inference --input_file $input_file --dest $INFERENCE_OUTPUT_DIR --gpu_devices $GPU_DEVICES --valid_smiles $VALIDATE_SMILES --canonical_smiles $CANONICALIZE_SMILES --clustering_bs $CLUSTERING_BS --chunk_size $CHUNK_SIZE --batch_size $BATCH_SIZE --skip_headers $SKIP_HEADERS --index_type $index_type
         fi
 
     elif [ "$command" = "embeddings_gpu" ]; then
-        if [ "$HELP" = "--help" ]; then
+        if [ "$HELP" = "true" ]; then
             docker run -u $UID  --entrypoint "python" -v /:/data --env PORT=$DB_PORT --env CONFIG_FILE=/data/$CONFIG_FILE --env LICENSING=True --env CHEESE_LICENSE_FILE=/data/$LICENSE_FILE --env TRANSFORMERS_CACHE=/tmp --rm $DB_IMAGE -c 'import cheese_database.cheese_cli as cli; cli.app();' $ALL_ARGS
         else
             cheese-embeddings --input_file $input_file --dest $INFERENCE_OUTPUT_DIR --search_types $SEARCH_TYPES --gpu_devices $GPU_DEVICES --save_format $save_format;
